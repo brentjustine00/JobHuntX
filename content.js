@@ -87,6 +87,7 @@ function scanLinkedIn() {
     ".jobs-unified-top-card__company-name",
     ".jobs-details-top-card__company-url",
     ".topcard__org-name-link",
+    "[class*='company-name']",
     "a[href*='/company/']"
   ];
 
@@ -96,11 +97,14 @@ function scanLinkedIn() {
     ".jobs-unified-top-card__job-title",
     "h1.t-24",
     "h1.top-card-layout__title",
-    ".topcard__title"
+    ".topcard__title",
+    "[class*='job-title']"
   ];
 
   // Selectors for Job Description
   const descriptionSelectors = [
+    "[class*='jobs-description']",
+    ".jobs-description",
     ".jobs-description__content",
     ".jobs-description-content__text",
     "#job-details",
