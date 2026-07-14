@@ -68,7 +68,23 @@ function scanJobPage() {
 
   let debugInfo = "";
   if (!description) {
-    const debugElements = Array.from(document.querySelectorAll("*"));
+    // Collect iframe details
+    const iframes = Array.from(document.querySelectorAll("iframe"));
+    const iframeDetails = iframes.map(f => {
+      let isAccessible = false;
+      try {
+        isAccessible = !!f.contentDocument;
+      } catch (e) {}
+      return {
+        id: f.id,
+        class: f.className,
+        src: f.src,
+        accessible: isAccessible
+      };
+    });
+
+    // Collect all elements across accessible frames
+    const debugElements = querySelectorAllAcrossFrames("*", document);
     const matches = [];
     for (const el of debugElements) {
       const text = el.innerText ? el.innerText.replace(/\s+/g, " ").trim().toLowerCase() : "";
@@ -77,13 +93,16 @@ function scanJobPage() {
           tag: el.tagName,
           class: el.className,
           id: el.id,
-          parent: el.parentElement ? `${el.parentElement.tagName}.${el.parentElement.className}` : "None",
           textSnippet: text.substring(0, 80)
         });
         if (matches.length >= 10) break;
       }
     }
-    debugInfo = "\n\n=== DEBUG INFO ===\n" + JSON.stringify(matches, null, 2);
+
+    debugInfo = "\n\n=== DEBUG INFO ===\n" + JSON.stringify({
+      iframes: iframeDetails,
+      matches: matches
+    }, null, 2);
 
     if (isKnownPlatform) {
       title = "No active job selected";
@@ -152,9 +171,9 @@ function scanLinkedIn(root = document) {
   ];
 
   return {
-    company: querySelectorWithin(root, companySelectors),
-    title: querySelectorWithin(root, titleSelectors),
-    description: querySelectorWithin(root, descriptionSelectors, true)
+    company: querySelectorAcrossFrames(root, companySelectors),
+    title: querySelectorAcrossFrames(root, titleSelectors),
+    description: querySelectorAcrossFrames(root, descriptionSelectors, true)
   };
 }
 
@@ -315,7 +334,7 @@ function detectTitleFallback() {
 }
 
 function scanJobPageByKeywords(root = document) {
-  const elements = Array.from(root.querySelectorAll("h1, h2, h3, h4, h5, h6, span, p, div, strong, b"));
+  const elements = querySelectorAllAcrossFrames("h1, h2, h3, h4, h5, h6, span, p, div, strong, b", root);
   const targetKeywords = ["about the job", "job description", "about the role", "role description", "responsibilities", "key responsibilities"];
   
   for (const el of elements) {
@@ -402,7 +421,22 @@ function detectDescriptionFallback() {
 /**
  * Helper to query multiple selectors and return first match within a root node
  */
-function querySelectorWithin(root, selectors, returnHtml = false) {
+function querySelectorAllAcrossFrames(selector, root = document) {
+  let elements = Array.from(root.querySelectorAll(selector));
+  const iframes = root.querySelectorAll("iframe");
+  for (const iframe of iframes) {
+    try {
+      if (iframe.contentDocument) {
+        elements = elements.concat(querySelectorAllAcrossFrames(selector, iframe.contentDocument));
+      }
+    } catch (e) {
+      // ignore security errors
+    }
+  }
+  return elements;
+}
+
+function querySelectorAcrossFrames(root, selectors, returnHtml = false) {
   for (const selector of selectors) {
     const element = root.querySelector(selector);
     if (element) {
@@ -412,20 +446,27 @@ function querySelectorWithin(root, selectors, returnHtml = false) {
       }
     }
   }
+
+  // Check sub-frames
+  const iframes = root.querySelectorAll("iframe");
+  for (const iframe of iframes) {
+    try {
+      if (iframe.contentDocument) {
+        const val = querySelectorAcrossFrames(iframe.contentDocument, selectors, returnHtml);
+        if (val) return val;
+      }
+    } catch (e) {}
+  }
+  
   return "";
 }
 
+function querySelectorWithin(root, selectors, returnHtml = false) {
+  return querySelectorAcrossFrames(root, selectors, returnHtml);
+}
+
 function queryFirstSelector(selectors, returnHtml = false) {
-  for (const selector of selectors) {
-    const element = document.querySelector(selector);
-    if (element) {
-      const val = returnHtml ? element.innerHTML : element.innerText;
-      if (val && val.replace(/\s+/g, " ").trim().length > 100) {
-        return val;
-      }
-    }
-  }
-  return "";
+  return querySelectorAcrossFrames(document, selectors, returnHtml);
 }
 
 /**
