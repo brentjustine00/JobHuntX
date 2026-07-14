@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobHuntX AI - Dashboard</title>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #131b2e;
+      --bg-tertiary: #1e293b;
+      --accent-color: #06b6d4; /* Neon cyan */
+      --accent-hover: #0891b2;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --success-color: #10b981;
+      --card-bg: rgba(30, 41, 59, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Header */
+    .app-header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+    }
+
+    .brand h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+      background-color: rgba(6, 182, 212, 0.1);
+      color: var(--accent-color);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+
+    /* Tabs Layout */
+    .tab-bar {
+      display: flex;
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 12px 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-color);
+      border-bottom-color: var(--accent-color);
+      background-color: rgba(6, 182, 212, 0.04);
+    }
+
+    /* Main Container Content panels */
+    .content-panels {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      position: relative;
+    }
+
+    .panel {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .panel.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards and Layout Elements */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Inputs and Fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .input-field {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-color);
+    }
+
+    textarea.input-field {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-color);
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-primary:disabled {
+      background-color: var(--border-color);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-tertiary);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: var(--text-muted);
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+      color: var(--bg-primary);
+    }
+
+    .btn-success:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Scraped Job Box Header */
+    .job-badge-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .job-title-scraped {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .job-company-scraped {
+      font-size: 0.875rem;
+      color: var(--accent-color);
+      font-weight: 500;
+    }
+
+    /* Output copy blocks */
+    .output-block {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      max-height: 250px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+
+    .copy-btn-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .copy-status {
+      font-size: 0.75rem;
+      color: var(--success-color);
+      margin-right: auto;
+      align-self: center;
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .mini-btn {
+      width: auto;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+    }
+
+    /* Preview section iframe */
+    .preview-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: calc(100vh - 150px);
+    }
+
+    .preview-frame-wrapper {
+      flex: 1;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #ffffff;
+    }
+
+    iframe#resume-preview-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Loading Overlay spinner */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(11, 15, 25, 0.85);
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--accent-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    /* Hidden resume anchor */
+    #hidden-resume-sandbox {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      width: 800px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <div class="app-header">
+    <div class="brand">
+      <img src="icon.png" alt="JobHuntX Logo">
+      <h1>JobHuntX AI</h1>
+    </div>
+    <div class="status-badge">ATS Engine Ready</div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-target="tab-tailor">Tailor</button>
+    <button class="tab-btn" data-target="tab-preview">Preview Resume</button>
+    <button class="tab-btn" data-target="tab-config">Configuration</button>
+  </div>
+
+  <!-- Panels Container -->
+  <div class="content-panels">
+    
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loading-text">Tailoring portfolio metrics...</div>
+    </div>
+
+    <!-- Panel 1: Tailoring Console -->
+    <div class="panel active" id="tab-tailor">
+      
+      <!-- Current Job Scraped Card -->
+      <div class="card">
+        <div class="card-title">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          Active Job Position
+        </div>
+        <div class="job-badge-container" id="job-meta-scraped">
+          <div class="job-title-scraped" id="scraped-title">No job scanned yet</div>
+          <div class="job-company-scraped" id="scraped-company">Click scan below to extract details</div>
+        </div>
+        <div style="margin-top: 14px;">
+          <button class="btn btn-secondary" id="btn-scan-page">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            Scan Job Page
+          </button>
+        </div>
+      </div>
+
+      <!-- Job Description Editor -->
+      <div class="form-group">
+        <label for="job-description-raw">Scraped Job Description</label>
+        <textarea class="input-field" id="job-description-raw" placeholder="Paste or review the scraped job description text here..."></textarea>
+      </div>
+
+      <!-- Trigger Action -->
+      <div>
+        <button class="btn btn-primary" id="btn-generate">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v2h2v-2zm0-6h-2v4h2v-4z"/></svg>
+          Tailor Resume & Cover Letter
+        </button>
+      </div>
+
+      <!-- Results Section -->
+      <div id="results-section" style="display: none; flex-direction: column; gap: 16px;">
+        
+        <!-- Cover Letter -->
+        <div class="card">
+          <div class="card-title">Tailored Cover Letter</div>
+          <div class="output-block" id="output-cover-letter">Generating...</div>
+          <div class="copy-btn-wrapper">
+            <span class="copy-status" id="cl-copy-status">Copied!</span>
+            <button class="btn btn-secondary mini-btn" id="btn-copy-cl">Copy to Clipboard</button>
+          </div>
+        </div>
+
+        <!-- Resume Bullets -->
+        <div class="card">
+          <div class="card-title">Tailored Resume Bullet Points</div>
+          <div class="output-block" id="output-resume-bullets" style="font-family: inherit; font-size: 0.8rem;">Generating...</div>
+        </div>
+
+        <!-- Download Action -->
+        <div>
+          <button class="btn btn-success" id="btn-download-pdf">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+            Download Tailored ATS PDF
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Panel 2: Preview Resume -->
+    <div class="panel" id="tab-preview">
+      <div class="preview-container">
+        <div class="preview-frame-wrapper">
+          <iframe id="resume-preview-frame"></iframe>
+        </div>
+        <div>
+          <button class="btn btn-success" id="btn-download-pdf-preview" disabled>
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+            Download Tailored ATS PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Configuration Console -->
+    <div class="panel" id="tab-config">
+      
+      <!-- API Settings -->
+      <div class="card">
+        <div class="card-title">Google AI Studio Settings</div>
+        <div class="form-group">
+          <label for="input-api-key">Gemini API Key</label>
+          <input type="password" class="input-field" id="input-api-key" placeholder="Enter x-goog-api-key...">
+        </div>
+        <div style="margin-top: 8px;">
+          <button class="btn btn-primary" id="btn-save-config">Save Settings</button>
+        </div>
+      </div>
+
+      <!-- Google Drive Settings -->
+      <div class="card">
+        <div class="card-title">Google Drive Auto-Upload</div>
+        <div class="form-group">
+          <label for="input-gdrive-url">Apps Script Web App URL</label>
+          <input type="text" class="input-field" id="input-gdrive-url" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+        <div style="margin-top: 8px;">
+          <button class="btn btn-primary" id="btn-save-gdrive">Save Drive Settings</button>
+        </div>
+        <div style="margin-top: 12px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
+          <p>Deploy a Google Apps Script as a <strong>Web App</strong> configured as:</p>
+          <ul style="margin-left: 16px; margin-top: 4px;">
+            <li>Execute as: <strong>Me (your email)</strong></li>
+            <li>Who has access: <strong>Anyone</strong></li>
+          </ul>
+          <details style="margin-top: 8px; cursor: pointer;">
+            <summary style="color: var(--accent-color); font-weight: 600;">Show Apps Script Code</summary>
+            <pre style="background: var(--bg-primary); padding: 8px; border-radius: 6px; margin-top: 6px; white-space: pre-wrap; font-size: 0.7rem; color: #a5f3fc; border: 1px solid var(--border-color); max-height: 120px; overflow-y: auto; font-family: monospace;">function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var decoded = Utilities.base64Decode(data.base64);
+    var blob = Utilities.newBlob(decoded, 'application/pdf', data.filename);
+    var folder = DriveApp.getRootFolder();
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      url: file.getUrl()
+    })).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+          </details>
+        </div>
+      </div>
+
+      <!-- Developer Profile Info -->
+      <div class="card">
+        <div class="card-title">Master Developer Profile</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; display: flex; flex-direction: column; gap: 8px;">
+          <p>This profile is sent to the Gemini AI API to match qualifications against job requirements. Keep this updated to match your core experience.</p>
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
+          <div class="form-group">
+            <label for="profile-context-textarea">Developer Profile Prompt Context</label>
+            <textarea class="input-field" id="profile-context-textarea" style="font-size: 0.75rem; min-height: 160px;"></textarea>
+          </div>
+          <button class="btn btn-secondary" id="btn-save-profile">Save Profile Context</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Hidden Sandbox container for html2pdf.js compilation -->
+  <div id="hidden-resume-sandbox"></div>
+
+  <!-- Bundle script for PDF generation & main script -->
+  <script src="html2pdf.bundle.min.js"></script>
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>
