@@ -68,7 +68,7 @@ function scanJobPage() {
 
   let debugInfo = "";
   if (!description) {
-    const debugElements = Array.from(document.querySelectorAll("*"));
+    const debugElements = querySelectorAllAcrossFrames("*", document);
     const matches = [];
     const headerMatches = [];
     
@@ -78,31 +78,34 @@ function scanJobPage() {
       const text = el.textContent ? el.textContent.replace(/\s+/g, " ").trim() : "";
       const textLower = text.toLowerCase();
       
-      // Search for the description container (leaf level)
-      if (text.includes("Discover your 100%") && text.length < 3000) {
+      // Search for any element containing "microsourcing" or "pooling" case-insensitively
+      if ((textLower.includes("microsourcing") || textLower.includes("pooling")) && text.length < 3000) {
         matches.push({
           tag: el.tagName,
           class: el.className,
           id: el.id,
-          parent: el.parentElement ? `${el.parentElement.tagName}.${el.parentElement.className}` : "None",
-          textLen: text.length
+          textSnippet: text.substring(0, 100)
         });
       }
       
-      // Search for headings
-      if (textLower === "about the job" || textLower === "job description") {
+      // Search for headings containing "about the job" or "job description"
+      if (textLower.length < 100 && (textLower.includes("about the job") || textLower.includes("job description"))) {
         headerMatches.push({
           tag: el.tagName,
           class: el.className,
           id: el.id,
-          parent: el.parentElement ? `${el.parentElement.tagName}.${el.parentElement.className}` : "None"
+          text: text
         });
       }
     }
     
+    // Sort and limit results
+    matches.sort((a, b) => a.textSnippet.length - b.textSnippet.length);
+    headerMatches.sort((a, b) => a.text.length - b.text.length);
+    
     debugInfo = "\n\n=== DEBUG INFO ===\n" + JSON.stringify({
-      descriptionElements: matches,
-      headingElements: headerMatches
+      descriptionElements: matches.slice(0, 15),
+      headingElements: headerMatches.slice(0, 15)
     }, null, 2);
 
     if (isKnownPlatform) {
