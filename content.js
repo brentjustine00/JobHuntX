@@ -25,8 +25,29 @@ function scanJobPage() {
   let title = "";
   let description = "";
 
+  // Check if we are on a known platform and find the details container
+  let pane = null;
   if (url.includes("linkedin.com")) {
-    ({ company, title, description } = scanLinkedIn());
+    const detailsPaneSelectors = [
+      ".jobs-search-two-pane__details",
+      ".jobs-details",
+      "[class*='jobs-search-two-pane__details']",
+      "[class*='jobs-details']",
+      "main"
+    ];
+    for (const selector of detailsPaneSelectors) {
+      const el = document.querySelector(selector);
+      if (el && el.innerText && el.innerText.length > 500) {
+        pane = el;
+        break;
+      }
+    }
+  }
+
+  const root = pane || document;
+
+  if (url.includes("linkedin.com")) {
+    ({ company, title, description } = scanLinkedIn(root));
   } else if (url.includes("wellfound.com") || url.includes("angel.co")) {
     ({ company, title, description } = scanWellfound());
   } else if (url.includes("greenhouse.io")) {
@@ -37,7 +58,7 @@ function scanJobPage() {
 
   // Fallback for job description if not found
   if (!description) {
-    description = scanJobPageByKeywords();
+    description = scanJobPageByKeywords(root);
   }
 
   const isKnownPlatform = url.includes("linkedin.com") || 
@@ -79,7 +100,7 @@ function scanJobPage() {
 /**
  * LinkedIn Specific Selector Scraping
  */
-function scanLinkedIn() {
+function scanLinkedIn(root = document) {
   // Selectors for Company Name
   const companySelectors = [
     ".job-details-jobs-unified-top-card__company-name",
@@ -103,19 +124,19 @@ function scanLinkedIn() {
 
   // Selectors for Job Description
   const descriptionSelectors = [
-    "[class*='jobs-description']",
-    ".jobs-description",
     ".jobs-description__content",
     ".jobs-description-content__text",
     "#job-details",
     ".show-more-less-html__markup",
-    ".jobs-box__html-content"
+    ".jobs-box__html-content",
+    ".jobs-description",
+    "[class*='jobs-description']"
   ];
 
   return {
-    company: queryFirstSelector(companySelectors),
-    title: queryFirstSelector(titleSelectors),
-    description: queryFirstSelector(descriptionSelectors, true)
+    company: querySelectorWithin(root, companySelectors),
+    title: querySelectorWithin(root, titleSelectors),
+    description: querySelectorWithin(root, descriptionSelectors, true)
   };
 }
 
@@ -275,22 +296,19 @@ function detectTitleFallback() {
   return "";
 }
 
-function scanJobPageByKeywords() {
-  const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6, span, p, div, strong, b"));
+function scanJobPageByKeywords(root = document) {
+  const elements = Array.from(root.querySelectorAll("h1, h2, h3, h4, h5, h6, span, p, div, strong, b"));
+  const targetKeywords = ["about the job", "job description", "about the role", "role description", "responsibilities", "key responsibilities"];
   
-  // Keywords commonly used for job descriptions
-  const keywords = ["about the job", "job description", "about the role", "role description", "responsibilities", "what you'll do", "about the position", "key responsibilities"];
-  
-  for (const keyword of keywords) {
-    const foundHeader = headings.find(el => {
-      const text = el.innerText ? el.innerText.trim().toLowerCase() : "";
-      return text === keyword || text.startsWith(keyword + ":") || text.startsWith(keyword + " -");
-    });
-    
-    if (foundHeader) {
-      const descriptionText = extractDescriptionFromHeader(foundHeader);
-      if (descriptionText && descriptionText.length > 150) {
-        return descriptionText;
+  for (const el of elements) {
+    const text = el.innerText ? el.innerText.trim().toLowerCase() : "";
+    if (text.length > 0 && text.length < 60) {
+      const matches = targetKeywords.some(kw => text.includes(kw));
+      if (matches) {
+        const descriptionText = extractDescriptionFromHeader(el);
+        if (descriptionText && descriptionText.length > 150) {
+          return descriptionText;
+        }
       }
     }
   }
@@ -364,14 +382,32 @@ function detectDescriptionFallback() {
 }
 
 /**
- * Helper to query multiple selectors and return first match
+ * Helper to query multiple selectors and return first match within a root node
+ */
+function querySelectorWithin(root, selectors, returnHtml = false) {
+  for (const selector of selectors) {
+    const element = root.querySelector(selector);
+    if (element) {
+      const val = returnHtml ? element.innerHTML : element.innerText;
+      if (val && val.trim().length > 100) {
+        return val;
+      }
+    }
+  }
+  return "";
+}
+
+/**
+ * Helper to query multiple selectors and return first match on the document
  */
 function queryFirstSelector(selectors, returnHtml = false) {
   for (const selector of selectors) {
     const element = document.querySelector(selector);
     if (element) {
-      // Use textContent or innerHTML based on needs
-      return returnHtml ? element.innerHTML : element.innerText;
+      const val = returnHtml ? element.innerHTML : element.innerText;
+      if (val && val.trim().length > 100) {
+        return val;
+      }
     }
   }
   return "";
