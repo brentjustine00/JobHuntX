@@ -68,40 +68,41 @@ function scanJobPage() {
 
   let debugInfo = "";
   if (!description) {
-    // Collect iframe details
-    const iframes = Array.from(document.querySelectorAll("iframe"));
-    const iframeDetails = iframes.map(f => {
-      let isAccessible = false;
-      try {
-        isAccessible = !!f.contentDocument;
-      } catch (e) {}
-      return {
-        id: f.id,
-        class: f.className,
-        src: f.src,
-        accessible: isAccessible
-      };
-    });
-
-    // Collect all elements across accessible frames
-    const debugElements = querySelectorAllAcrossFrames("*", document);
+    const debugElements = Array.from(document.querySelectorAll("*"));
     const matches = [];
+    const headerMatches = [];
+    
     for (const el of debugElements) {
-      const text = el.innerText ? el.innerText.replace(/\s+/g, " ").trim().toLowerCase() : "";
-      if (text.includes("discover your 100%") || text.includes("position: back-end developer") || text.includes("about the job")) {
+      if (["HTML", "BODY", "MAIN", "SCRIPT", "STYLE"].includes(el.tagName)) continue;
+      
+      const text = el.innerText ? el.innerText.replace(/\s+/g, " ").trim() : "";
+      const textLower = text.toLowerCase();
+      
+      // Search for the description container (leaf level)
+      if (text.includes("Discover your 100%") && text.length < 3000) {
         matches.push({
           tag: el.tagName,
           class: el.className,
           id: el.id,
-          textSnippet: text.substring(0, 80)
+          parent: el.parentElement ? `${el.parentElement.tagName}.${el.parentElement.className}` : "None",
+          textLen: text.length
         });
-        if (matches.length >= 10) break;
+      }
+      
+      // Search for headings
+      if (textLower === "about the job" || textLower === "job description") {
+        headerMatches.push({
+          tag: el.tagName,
+          class: el.className,
+          id: el.id,
+          parent: el.parentElement ? `${el.parentElement.tagName}.${el.parentElement.className}` : "None"
+        });
       }
     }
-
+    
     debugInfo = "\n\n=== DEBUG INFO ===\n" + JSON.stringify({
-      iframes: iframeDetails,
-      matches: matches
+      descriptionElements: matches,
+      headingElements: headerMatches
     }, null, 2);
 
     if (isKnownPlatform) {
