@@ -358,38 +358,14 @@ function scanJobPageByKeywords(root = document) {
 
 function extractDescriptionFromHeader(headerNode) {
   let current = headerNode;
-  
-  // Go up the DOM tree to find a container with siblings (e.g. to avoid being stuck inside <h2><span>)
-  while (current && !current.nextElementSibling && current.parentElement && current.parentElement !== document.body) {
+  while (current && current.parentElement && current.parentElement.tagName !== "BODY" && current.parentElement.tagName !== "HTML") {
     current = current.parentElement;
-  }
-  
-  if (!current) return "";
-  
-  let sibling = current.nextElementSibling;
-  let textContent = "";
-  let siblingCount = 0;
-  
-  while (sibling && siblingCount < 12) { // Limit sibling traversal to avoid runaways
-    const tag = sibling.tagName.toUpperCase();
-    if (["FOOTER", "NAV", "HEADER"].includes(tag)) {
-      break;
+    const text = current.textContent ? current.textContent.replace(/\s+/g, " ").trim() : "";
+    if (text.length > 200 && text.length < 15000) {
+      return current.textContent;
     }
-    
-    // Stop if we hit a sibling that is another H1, H2, or H3 heading
-    if (tag.startsWith("H") && !isNaN(tag.substring(1))) {
-      const headingLevel = parseInt(tag.substring(1), 10);
-      if (headingLevel <= 3) {
-        break; 
-      }
-    }
-    
-    textContent += sibling.textContent + "\n";
-    sibling = sibling.nextElementSibling;
-    siblingCount++;
   }
-  
-  return textContent.trim();
+  return "";
 }
 
 function detectDescriptionFallback() {
