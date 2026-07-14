@@ -68,22 +68,19 @@ function scanJobPage() {
 
   let debugInfo = "";
   if (!description) {
-    const debugElements = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6, span, strong, div"));
+    const debugElements = Array.from(document.querySelectorAll("*"));
     const matches = [];
     for (const el of debugElements) {
-      const text = el.innerText ? el.innerText.trim().toLowerCase() : "";
-      if (text === "about the job" || text === "job description") {
-        let parent = el.parentElement;
-        let parentInfo = parent ? `${parent.tagName}.${parent.className}` : "None";
-        let nextSib = el.nextElementSibling;
-        let nextSibInfo = nextSib ? `${nextSib.tagName}.${nextSib.className}` : "None";
+      const text = el.innerText ? el.innerText.replace(/\s+/g, " ").trim().toLowerCase() : "";
+      if (text.includes("discover your 100%") || text.includes("position: back-end developer") || text.includes("about the job")) {
         matches.push({
           tag: el.tagName,
           class: el.className,
-          parent: parentInfo,
-          nextSibling: nextSibInfo,
-          parentNextSibling: parent && parent.nextElementSibling ? `${parent.nextElementSibling.tagName}.${parent.nextElementSibling.className}` : "None"
+          id: el.id,
+          parent: el.parentElement ? `${el.parentElement.tagName}.${el.parentElement.className}` : "None",
+          textSnippet: text.substring(0, 80)
         });
+        if (matches.length >= 10) break;
       }
     }
     debugInfo = "\n\n=== DEBUG INFO ===\n" + JSON.stringify(matches, null, 2);
@@ -322,12 +319,12 @@ function scanJobPageByKeywords(root = document) {
   const targetKeywords = ["about the job", "job description", "about the role", "role description", "responsibilities", "key responsibilities"];
   
   for (const el of elements) {
-    const text = el.innerText ? el.innerText.trim().toLowerCase() : "";
+    const text = el.innerText ? el.innerText.replace(/\s+/g, " ").trim().toLowerCase() : "";
     if (text.length > 0 && text.length < 60) {
       const matches = targetKeywords.some(kw => text.includes(kw));
       if (matches) {
         const descriptionText = extractDescriptionFromHeader(el);
-        if (descriptionText && descriptionText.length > 150) {
+        if (descriptionText && descriptionText.replace(/\s+/g, " ").trim().length > 150) {
           return descriptionText;
         }
       }
@@ -410,7 +407,7 @@ function querySelectorWithin(root, selectors, returnHtml = false) {
     const element = root.querySelector(selector);
     if (element) {
       const val = returnHtml ? element.innerHTML : element.innerText;
-      if (val && val.trim().length > 100) {
+      if (val && val.replace(/\s+/g, " ").trim().length > 100) {
         return val;
       }
     }
@@ -418,15 +415,12 @@ function querySelectorWithin(root, selectors, returnHtml = false) {
   return "";
 }
 
-/**
- * Helper to query multiple selectors and return first match on the document
- */
 function queryFirstSelector(selectors, returnHtml = false) {
   for (const selector of selectors) {
     const element = document.querySelector(selector);
     if (element) {
       const val = returnHtml ? element.innerHTML : element.innerText;
-      if (val && val.trim().length > 100) {
+      if (val && val.replace(/\s+/g, " ").trim().length > 100) {
         return val;
       }
     }
