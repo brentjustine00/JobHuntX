@@ -66,7 +66,28 @@ function scanJobPage() {
                           url.includes("greenhouse.io") || 
                           url.includes("lever.co");
 
+  let debugInfo = "";
   if (!description) {
+    const debugElements = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6, span, strong, div"));
+    const matches = [];
+    for (const el of debugElements) {
+      const text = el.innerText ? el.innerText.trim().toLowerCase() : "";
+      if (text === "about the job" || text === "job description") {
+        let parent = el.parentElement;
+        let parentInfo = parent ? `${parent.tagName}.${parent.className}` : "None";
+        let nextSib = el.nextElementSibling;
+        let nextSibInfo = nextSib ? `${nextSib.tagName}.${nextSib.className}` : "None";
+        matches.push({
+          tag: el.tagName,
+          class: el.className,
+          parent: parentInfo,
+          nextSibling: nextSibInfo,
+          parentNextSibling: parent && parent.nextElementSibling ? `${parent.nextElementSibling.tagName}.${parent.nextElementSibling.className}` : "None"
+        });
+      }
+    }
+    debugInfo = "\n\n=== DEBUG INFO ===\n" + JSON.stringify(matches, null, 2);
+
     if (isKnownPlatform) {
       title = "No active job selected";
       company = url.includes("linkedin.com") ? "LinkedIn" : 
@@ -92,7 +113,7 @@ function scanJobPage() {
   return {
     company: company ? company.trim() : "Unknown Company",
     title: title ? title.trim() : "Job Position",
-    description: description ? cleanText(description) : "",
+    description: (description ? cleanText(description) : "") + debugInfo,
     url: url
   };
 }
