@@ -34,13 +34,17 @@ JobHuntX/
 
 ## Installation Guide
 
-To load the extension on your Google Chrome browser:
+### 1. Set Up Profile Templates (Required)
+Since private developer details are excluded from Git, you must first create your local profile files from the provided templates:
+1. Duplicate `resumeTemplate.template.js` and rename it to `resumeTemplate.js`.
+2. Duplicate `sidepanel.template.js` and rename it to `sidepanel.js`.
+3. Open `sidepanel.js` and customize `defaultProfileContext` with your own resume details, or customize the HTML in `resumeTemplate.js` as desired.
 
+### 2. Load the Extension on Google Chrome
 1. Open Chrome and navigate to `chrome://extensions/`.
 2. Enable **Developer mode** using the toggle switch in the top-right corner.
 3. Click the **Load unpacked** button in the top-left corner.
-4. Select your local `JobHuntX` project folder:
-   `c:\Users\brent justine\Documents\Projects\JobHuntX`
+4. Select your local `JobHuntX` project folder.
 5. Open your Chrome extensions menu (puzzle icon in the toolbar) and pin **JobHuntX AI** for quick access.
 
 ---

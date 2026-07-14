@@ -1,12 +1,12 @@
-import { resumeTemplate } from "./resumeTemplate.js";
+import { resumeTemplate } from "./resumeTemplate.template.js";
 
 // Default Master Developer Profile Context (populated from Brent's complete resume)
-const defaultProfileContext = `Brent Justine Barbadillo
-Location: Laguna, Philippines
-Email: brentjustine00@gmail.com
-Phone: +63 928 760 425
-GitHub: github.com/brentjustine00
-LinkedIn: https://www.linkedin.com/in/brent-justine-barbadillo/
+const defaultProfileContext = `[YOUR NAME]
+Location: [YOUR LOCATION]
+Email: [YOUR EMAIL ADDRESS]
+Phone: [YOUR PHONE NUMBER]
+GitHub: github.com/[YOUR_GITHUB_USERNAME]
+LinkedIn: https://www.linkedin.com/in/[YOUR_LINKEDIN_USERNAME]/
 
 TECHNICAL SKILLS:
 - Languages: Python, JavaScript, TypeScript, HTML5, CSS3, SQL
@@ -16,54 +16,54 @@ TECHNICAL SKILLS:
 - Tools and Protocols: Git, GitHub, Manifest V3, WebSockets, DOM Manipulation, JSON Parsing, Ngrok
 
 PROJECTS:
-1. Context-Aware AI Recruitment and Workflow Automation Engine (JS, TS, Chrome Extensions, OpenAI/Anthropic APIs, DOM Scraping):
-   - Built a zero-input browser extension contextual scraper for Wellfound and LinkedIn.
-   - Engineered semantic extraction to isolate target tech stack, required seniority, and specific operational pain points.
-   - Orchestrated dynamic background workers for rate-limited LLM API communication with hyper-constrained prompts.
-   - Implemented runtime UI injection to display tailored cover letters and auto-fill profile data on viewports.
-2. Real-Time OSINT Data Pipeline and Algorithmic Trading Bot (Python, Telegram API, TradeLocker API, WebSockets, Asyncio):
-   - Scraped, parsed and sanitized text trading signals from Telegram.
-   - Asyncio engine monitored streams, extracted entry, stop-loss, and take-profit parameters.
-   - Integrated TradeLocker API for automated real-time order placement and position management (sub-second latency).
-   - Engineered state-management and error-handling framework for network dropouts and API rate limits.
-3. Gamified GitHub Analytics Platform and Dynamic Portfolio Builder (React, Next.js, GitHub REST/GraphQL APIs, Supabase):
-   - Designed AI developer insights platform authenticating via GitHub OAuth 2.0 to access metadata.
-   - Programmed complex pipeline workers to aggregate commit velocities, language splits, and complexity trends.
-   - Processed raw repository data through LLM orchestration for personalized career pathways and gamified badges.
-   - Created Supabase database schemas supporting customizable public portfolios.
-4. Distributed Event-Driven Dropshipping Platform with Embedded AI Support (React, Next.js, FastAPI, Webhooks, Ngrok):
-   - Developed robust full-stack e-commerce utilizing FastAPI backend paired with Next.js frontend.
-   - Built secure Ngrok webhook receiver during development capturing inventory and shipping events from CJ Dropshipping API.
-   - Integrated production-ready authentication and Supabase database with optimized indexing and RLS policies.
-   - Implemented stateful AI customer support agent powered by live LLM stream chat systems.
-5. Offline-First EdTech Mobile Application (React Native, SQLite, Supabase Sync, Adaptive Testing):
-   - Published NPE Board Exam preparation mobile app with offline-first architecture for low-connectivity.
-   - Programmed multi-tiered question generator sampling 500+ questions into randomized tiers.
-   - Engineered offline data-sync caching progress and syncing with Supabase upon reconnection.
-   - Integrated AI tutoring module providing real-time feedback on weak testing domains.
-6. High-Conversion, Core-Web-Vitals Optimized Digital Assets (HTML5, CSS3, Next.js, React, Performance Optimization):
-   - Developed 3 responsive landing pages focusing on semantic HTML and modern CSS layouts.
-   - Achieved Google Lighthouse scores of 100/100 across Performance, Accessibility, Best Practices, and SEO.
-   - Implemented frontend optimizations: asset compression, next-gen formats, lazy loading, and code-splitting.
-7. Private 1-on-1 WebRTC Video Call Application (React, Vite, WebRTC, Supabase Realtime, CSS Animations):
-   - Designed Vite application integrated with Supabase Realtime for private 1-on-1 video calls.
-   - Engineered WebRTC peer-to-peer connections with Google STUN servers for NAT traversal.
+1. JobHuntX AI: Automated AI Recruitment and ATS Resume Engine (JavaScript, Chrome Extensions API (Manifest V3), Google Gemini API (Gemini 3.5 Flash), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation):
+   - Engineered a Manifest V3 Chrome Extension utilizing an ephemeral background service worker and the Chrome SidePanel API to construct a persistent split-screen workspace for job application workflows.
+   - Developed a resilient DOM scraping engine that extracts unstructured HTML job descriptions in real-time from active job boards including LinkedIn, Wellfound, Greenhouse, and Lever.
+   - Integrated the Google Gemini 3.5 Flash API to parse target job descriptions and dynamically tailor resumes by selecting the top 3–4 most relevant projects while hiding the rest to fit single-page limits.
+   - Built a Google Drive auto-upload sync that compiles resumes client-side using html2pdf.js, uploads the PDF via a Google Apps Script proxy, and dynamically inserts the live shareable links into tailored cover letters.
+2. Real-Time OSINT Data Pipeline and Algorithmic Trading Bot (Python, Telethon, Pyrogram (Telegram API), TradeLocker API, WebSockets, Asyncio, Logging):
+   - Architected a real-time Open Source Intelligence (OSINT) data pipeline that scrapes, sanitizes, and structure-parses raw text trading signals from dynamic Telegram channels.
+   - Built an asynchronous execution engine using Python's asyncio to monitor incoming streams, extract trade parameters including entry price, stop-loss, and take-profit boundaries, and instantaneously convert them into valid JSON payloads.
+   - Integrated directly with the TradeLocker API to automate real-time order placement, position management, and execution with sub-second latency.
+   - Engineered a comprehensive state-management and error-handling framework to manage network dropouts, API rate limits, and market volatility safeguards, ensuring zero silent failures.
+3. Gamified GitHub Analytics Platform and Dynamic Portfolio Builder (React, Next.js, GitHub REST API, GitHub GraphQL API, Supabase, OAuth 2.0, Tailwind CSS):
+   - Designed an AI-powered developer insights platform that securely authenticates users via GitHub OAuth 2.0 to access public and private repository metadata.
+   - Programmed complex pipeline workers to aggregate repository data footprints, tracking language distributions, commit velocities, complexity trends, and documentation standards.
+   - Processed raw repository data through an LLM orchestration layer to generate personalized, gamified career pathways complete with automated achievement badges and milestone metrics.
+   - Created a dynamic database schema in Supabase supporting a customizable public portfolio builder, allowing users to host, edit, and render public-facing developer profiles.
+4. Distributed Event-Driven Dropshipping Platform with Embedded AI Support (React, Next.js, FastAPI, Supabase (Auth and Database), OpenAI API, CJ Dropshipping Webhooks, Ngrok):
+   - Developed a robust, full-stack e-commerce architecture utilizing FastAPI for a high-performance, asynchronous backend paired with Next.js for a responsive frontend.
+   - Built a secure webhook receiver infrastructure utilizing Ngrok during development to capture and verify real-time, asynchronous inventory and shipping event payloads from the CJ Dropshipping API.
+   - Integrated a production-ready authentication and relational database layer using Supabase, deploying optimized SQL indexing and row-level security (RLS) policies.
+   - Implemented an embedded, stateful AI customer support agent and live chat system powered by LLM API streams, utilizing prompt engineering and system-context constraints to handle customer inquiries dynamically.
+5. Offline-First EdTech Mobile Application (NPE Board Reviewer) (React Native, Local Caching (SQLite, AsyncStorage), Supabase Sync, Adaptive Testing Algorithms):
+   - Designed and published a high-performance mobile application dedicated to NPE Board Exam preparation, featuring an offline-first architecture to ensure seamless functionality in low-connectivity areas.
+   - Programmed a custom multi-tiered question generation engine that samples a pool of over 500 questions, organizing them into unique 100-question tier structures with randomized sampling logic.
+   - Engineered an offline data-synchronization protocol that caches local progress, quiz scores, and telemetry on the device, silently resolving conflicts and syncing with Supabase once network connectivity is restored.
+   - Integrated an AI tutoring module that provides real-time, personalized critique, conceptual feedback, and adaptive learning suggestions based on a user’s weak testing domains.
+6. High-Conversion, Core-Web-Vitals Optimized Digital Assets (HTML5, CSS3, Next.js, React, Tailwind CSS, Lighthouse Auditing, Web Performance Optimization):
+   - Developed 3 high-fidelity, highly responsive landing pages focusing on semantic HTML, modern CSS practices, and responsive design layouts.
+   - Achieved top-tier Google Lighthouse scores approaching 100/100 across Performance, Accessibility, Best Practices, and SEO metrics.
+   - Implemented intensive frontend performance optimizations, including strict asset compression, next-gen image formats, code-splitting, lazy loading of non-critical elements, and the elimination of render-blocking resources.
+7. Private 1-on-1 WebRTC Video Call Application (React, Vite, WebRTC APIs, Supabase Realtime, Tailwind CSS, CSS Animations):
+   - Designed and built a React (Vite) application integrated with Supabase Realtime to host private 1-on-1 video calls utilizing a single shared-password login system.
+   - Engineered robust WebRTC peer-to-peer connections with Google STUN servers for seamless ICE candidate negotiation and NAT traversal.
    - Developed custom signaling state layer in Supabase for ICE candidate negotiation and exchange.
-   - Implemented fallback recovery logic (ICE restart) and mobile-first dashboard controls.
+   - Implemented auto-reconnect fallback logic (ICE restart and PeerConnection rebuilds) alongside a mobile-first dashboard containing mute, camera toggle, and draggable local preview controls.
 
 WORK EXPERIENCE:
-1. Nextvas - Customer Support Email Representative (Feb 2026 - Present):
+1. [YOUR EMPLOYER] - [YOUR JOB TITLE] ([START DATE] - Present):
    - Manage complex client ticketing workflows via text communication with high efficiency.
    - Optimize standard response cycles by keeping internal communication logs structured and accurate.
-2. SPES Program - Data Encoder (Aug 2022 - Nov 2022):
+2. [YOUR PREVIOUS EMPLOYER] - [YOUR PREVIOUS JOB TITLE] ([START DATE] - [END DATE]):
    - Processed massive visual and physical records arrays into institutional digital tracking databases.
    - Ensured 100% data integrity and input accuracy metrics under rapid processing schedules.
 
 EDUCATION:
-- B.S. in Computer Science - 4th Year, Laguna State Polytechnic University (Expected 2027)
-- Graduated Senior High School, Trade College (2020 - 2022)
-- Completed Junior High School, Lico De Bay (2016 - 2020)
-- Graduated Elementary, Father Angelico Lipani School (2010 - 2016)`;
+- [YOUR DEGREE] - [YOUR STATUS], [YOUR UNIVERSITY] ([EXPECTED GRADUATION])
+- Graduated Senior High School, [YOUR HIGH SCHOOL] (2020 - 2022)
+- Completed Junior High School, [YOUR JUNIOR HIGH SCHOOL] (2016 - 2020)
+- Graduated Elementary, [YOUR ELEMENTARY SCHOOL] (2010 - 2016)`;
 
 // State variables
 let currentJobData = {
@@ -115,11 +115,31 @@ function loadConfiguration() {
     }
     
     // Set developer profile (use default if not saved yet)
-    const profileText = result.developerProfile || defaultProfileContext;
+    let profileText = result.developerProfile || defaultProfileContext;
+    
+    // Automatically migrate old default profile details to the new details if they are present
+    let needsUpdate = false;
+    if (profileText && (profileText.includes("Lico De Bay") || profileText.includes("JobHuntX AI: Automated Resume & Cover Letter Tailoring Suite"))) {
+      if (profileText.includes("Scraped, parsed and sanitized text trading signals from Telegram.")) {
+        // Safe to replace the entire profile text since they are using the old default set of projects
+        profileText = defaultProfileContext;
+      } else {
+        // Surgical updates
+        profileText = profileText
+          .replace("JobHuntX AI: Automated Resume & Cover Letter Tailoring Suite (JavaScript, Manifest V3, Gemini API, Google Apps Script, Chrome Extension APIs, DOM Manipulation):", "JobHuntX AI: Automated AI Recruitment and ATS Resume Engine (JavaScript, Chrome Extensions API (Manifest V3), Google Gemini API (Gemini 3.5 Flash), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation):")
+          .replace("Built a Chrome extension that scrapes and parses unstructured HTML of active job listings directly from LinkedIn and Wellfound.", "Engineered a Manifest V3 Chrome Extension utilizing an ephemeral background service worker and the Chrome SidePanel API to construct a persistent split-screen workspace for job application workflows.")
+          .replace("Engineered a dynamic project-filtering and tailoring engine that maps developer profiles against job specifications to ensure single-page resume ATS compliance.", "Developed a resilient DOM scraping engine that extracts unstructured HTML job descriptions in real-time from active job boards including LinkedIn, Wellfound, Greenhouse, and Lever.")
+          .replace("Orchestrated background service workers for secure Gemini API integration, generating hook-focused cover letters and tailored engineering resumes.", "Integrated the Google Gemini 3.5 Flash API to parse target job descriptions and dynamically tailor resumes by selecting the top 3–4 most relevant projects while hiding the rest to fit single-page limits.")
+          .replace("Implemented Google Drive synchronization via a Google Apps Script proxy to auto-upload generated PDFs and embed live links into cover letters.", "Built a Google Drive auto-upload sync that compiles resumes client-side using html2pdf.js, uploads the PDF via a Google Apps Script proxy, and dynamically inserts the live shareable links into tailored cover letters.")
+          .replace("Lico De Bay", "Liceo De Bay");
+      }
+      needsUpdate = true;
+    }
+    
     document.getElementById("profile-context-textarea").value = profileText;
     
-    if (!result.developerProfile) {
-      chrome.storage.local.set({ developerProfile: defaultProfileContext });
+    if (!result.developerProfile || needsUpdate) {
+      chrome.storage.local.set({ developerProfile: profileText });
     }
   });
 

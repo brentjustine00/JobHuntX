@@ -1,12 +1,12 @@
 // ATS-Optimized HTML/CSS Resume Template for data-binding and PDF compilation
-// Pre-populated with Brent Justine Barbadillo's complete resume details (all pages)
+// Pre-populated with clean, anonymized placeholders for GitHub showcase
 
 export const resumeTemplate = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Brent Justine Barbadillo - Technical Resume</title>
+  <title>[YOUR NAME] - Technical Resume</title>
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -170,18 +170,18 @@ export const resumeTemplate = `
     
     <!-- Page 1 Header -->
     <div class="header">
-      <h1>Brent Justine Barbadillo</h1>
+      <h1>[YOUR NAME]</h1>
       <div class="header-links">
-        <span>Laguna, Philippines</span>
+        <span>[YOUR LOCATION]</span>
         <span>|</span>
-        <span>+63 928 760 425</span>
+        <span>[YOUR PHONE NUMBER]</span>
         <span>|</span>
-        <span><a href="mailto:brentjustine00@gmail.com">brentjustine00@gmail.com</a></span>
+        <span><a href="mailto:[YOUR_EMAIL_ADDRESS]">[YOUR EMAIL ADDRESS]</a></span>
       </div>
       <div class="header-links">
-        <span>GitHub: <a href="https://github.com/brentjustine00" target="_blank">github.com/brentjustine00</a></span>
+        <span>GitHub: <a href="https://github.com/[YOUR_GITHUB_USERNAME]" target="_blank">github.com/[YOUR_GITHUB_USERNAME]</a></span>
         <span>|</span>
-        <span>LinkedIn: <a href="https://www.linkedin.com/in/brent-justine-barbadillo/" target="_blank">linkedin.com/in/brent-justine-barbadillo/</a></span>
+        <span>LinkedIn: <a href="https://www.linkedin.com/in/[YOUR_LINKEDIN_USERNAME]/" target="_blank">linkedin.com/in/[YOUR_LINKEDIN_USERNAME]/</a></span>
       </div>
     </div>
 
@@ -208,19 +208,19 @@ export const resumeTemplate = `
     <!-- Technical Projects Section -->
     <div class="section-title">Technical Projects</div>
 
-    <!-- Project 1: AI Recruitment Engine -->
+    <!-- Project 1: JobHuntX AI -->
     <div class="project-item" id="project-recruitment">
       <div class="project-header">
-        <span>Context-Aware AI Recruitment and Workflow Automation Engine</span>
+        <span>JobHuntX AI: Automated AI Recruitment and ATS Resume Engine</span>
       </div>
       <div class="project-tech">
-        Technologies used: JavaScript, TypeScript, Chrome Extensions API (Manifest V3), OpenAI API, Anthropic API, DOM Manipulation, CSS Selectors, Regex Parsing
+        Technologies used: JavaScript, Chrome Extensions API (Manifest V3), Google Gemini API (Gemini 3.5 Flash), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation
       </div>
       <ul class="bullets">
-        <li id="bullet-project1">Built a zero-input browser extension acting as a contextual web scraper to parse unstructured HTML directly from active job boards including Wellfound and LinkedIn.</li>
-        <li>Engineered a semantic extraction engine that filters out webpage noise to cleanly isolate core variables such as target tech stack, required seniority, company mission, and specific operational pain points.</li>
-        <li>Orchestrated dynamic background workers to handle secure, rate-limited LLM API communication, developing hyper-constrained system prompting to eliminate typical AI hallucinations and output peer-to-peer engineering pitches in real-time.</li>
-        <li>Implemented runtime UI injection to seamlessly map and display tailored cover letters and auto-fill profile data on the active viewport.</li>
+        <li id="bullet-project1">Engineered a Manifest V3 Chrome Extension utilizing an ephemeral background service worker and the Chrome SidePanel API to construct a persistent split-screen workspace for job application workflows.</li>
+        <li>Developed a resilient DOM scraping engine that extracts unstructured HTML job descriptions in real-time from active job boards including LinkedIn, Wellfound, Greenhouse, and Lever.</li>
+        <li>Integrated the Google Gemini 3.5 Flash API to parse target job descriptions and dynamically tailor resumes by selecting the top 3–4 most relevant projects while hiding the rest to fit single-page limits.</li>
+        <li>Built a Google Drive auto-upload sync that compiles resumes client-side using html2pdf.js, uploads the PDF via a Google Apps Script proxy, and dynamically inserts the live shareable links into tailored cover letters.</li>
       </ul>
     </div>
 
@@ -324,8 +324,8 @@ export const resumeTemplate = `
     
     <div class="work-item">
       <div class="work-header">
-        <span>Nextvas — Customer Support Email Representative</span>
-        <span class="work-date">February 2026 to Present</span>
+        <span>[YOUR EMPLOYER] — [YOUR JOB TITLE]</span>
+        <span class="work-date">[START DATE] to Present</span>
       </div>
       <ul class="bullets">
         <li>Manage complex client ticketing workflows via text communication, resolving user operations issues with high efficiency.</li>
@@ -335,8 +335,8 @@ export const resumeTemplate = `
 
     <div class="work-item">
       <div class="work-header">
-        <span>SPES Program — Data Encoder (Summer Engagement)</span>
-        <span class="work-date">August 2022 to November 2022</span>
+        <span>[YOUR PREVIOUS EMPLOYER] — [YOUR PREVIOUS JOB TITLE]</span>
+        <span class="work-date">[START DATE] to [END DATE]</span>
       </div>
       <ul class="bullets">
         <li>Processed massive visual and physical records arrays into institutional digital tracking databases.</li>
@@ -347,25 +347,25 @@ export const resumeTemplate = `
     <!-- Education Section -->
     <div class="section-title">Education</div>
     <div class="education-item">
-      <span><strong>Laguna State Polytechnic University - Sta. Cruz Campus (LSPU SCC)</strong></span>
-      <span>Expected 2027</span>
+      <span><strong>[YOUR UNIVERSITY]</strong></span>
+      <span>[GRADUATION YEAR]</span>
     </div>
     <div class="education-sub">
-      Bachelor of Science in Computer Science - 4th Year Undergraduate
+      [YOUR DEGREE] - [YOUR YEAR / STATUS]
     </div>
     
     <div class="education-item">
-      <span><strong>Trade College</strong> - Graduated Senior High School</span>
+      <span><strong>[YOUR HIGH SCHOOL]</strong> - Graduated Senior High School</span>
       <span>2020 - 2022</span>
     </div>
     
     <div class="education-item">
-      <span><strong>Lico De Bay</strong> - Completed Junior High School</span>
+      <span><strong>[YOUR JUNIOR HIGH SCHOOL]</strong> - Completed Junior High School</span>
       <span>2016 - 2020</span>
     </div>
 
     <div class="education-item">
-      <span><strong>Father Angelico Lipani School</strong> - Graduated Elementary</span>
+      <span><strong>[YOUR ELEMENTARY SCHOOL]</strong> - Graduated Elementary</span>
       <span>2010 - 2016</span>
     </div>
 
