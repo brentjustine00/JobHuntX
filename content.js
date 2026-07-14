@@ -47,6 +47,9 @@ function scanJobPage() {
 
   // Fallback for job description if not found
   if (!description) {
+    description = scanJobPageByKeywords();
+  }
+  if (!description) {
     description = detectDescriptionFallback();
   }
 
@@ -252,6 +255,64 @@ function detectTitleFallback() {
   if (h1 && h1.innerText) return h1.innerText;
 
   return "";
+}
+
+function scanJobPageByKeywords() {
+  const headings = Array.from(document.querySelectorAll("h1, h2, h3, h4, h5, h6, span, p, div, strong, b"));
+  
+  // Keywords commonly used for job descriptions
+  const keywords = ["about the job", "job description", "about the role", "role description", "responsibilities", "what you'll do", "about the position", "key responsibilities"];
+  
+  for (const keyword of keywords) {
+    const foundHeader = headings.find(el => {
+      const text = el.innerText ? el.innerText.trim().toLowerCase() : "";
+      return text === keyword || text.startsWith(keyword + ":") || text.startsWith(keyword + " -");
+    });
+    
+    if (foundHeader) {
+      const descriptionText = extractDescriptionFromHeader(foundHeader);
+      if (descriptionText && descriptionText.length > 150) {
+        return descriptionText;
+      }
+    }
+  }
+  return "";
+}
+
+function extractDescriptionFromHeader(headerNode) {
+  let current = headerNode;
+  
+  // Go up the DOM tree to find a container with siblings (e.g. to avoid being stuck inside <h2><span>)
+  while (current && !current.nextElementSibling && current.parentElement && current.parentElement !== document.body) {
+    current = current.parentElement;
+  }
+  
+  if (!current) return "";
+  
+  let sibling = current.nextElementSibling;
+  let textContent = "";
+  let siblingCount = 0;
+  
+  while (sibling && siblingCount < 12) { // Limit sibling traversal to avoid runaways
+    const tag = sibling.tagName.toUpperCase();
+    if (["FOOTER", "NAV", "HEADER"].includes(tag)) {
+      break;
+    }
+    
+    // Stop if we hit a sibling that is another H1, H2, or H3 heading
+    if (tag.startsWith("H") && !isNaN(tag.substring(1))) {
+      const headingLevel = parseInt(tag.substring(1), 10);
+      if (headingLevel <= 3) {
+        break; 
+      }
+    }
+    
+    textContent += sibling.innerText + "\n";
+    sibling = sibling.nextElementSibling;
+    siblingCount++;
+  }
+  
+  return textContent.trim();
 }
 
 function detectDescriptionFallback() {
