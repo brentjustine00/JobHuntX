@@ -37,7 +37,7 @@ function scanJobPage() {
     ];
     for (const selector of detailsPaneSelectors) {
       const el = document.querySelector(selector);
-      if (el && el.innerText && el.innerText.length > 500) {
+      if (el && el.textContent && el.textContent.length > 500) {
         pane = el;
         break;
       }
@@ -75,7 +75,7 @@ function scanJobPage() {
     for (const el of debugElements) {
       if (["HTML", "BODY", "MAIN", "SCRIPT", "STYLE"].includes(el.tagName)) continue;
       
-      const text = el.innerText ? el.innerText.replace(/\s+/g, " ").trim() : "";
+      const text = el.textContent ? el.textContent.replace(/\s+/g, " ").trim() : "";
       const textLower = text.toLowerCase();
       
       // Search for the description container (leaf level)
@@ -329,7 +329,7 @@ function detectTitleFallback() {
   }
 
   const h1 = document.querySelector("h1");
-  if (h1 && h1.innerText) return h1.innerText;
+  if (h1 && h1.textContent) return h1.textContent;
 
   return "";
 }
@@ -339,7 +339,7 @@ function scanJobPageByKeywords(root = document) {
   const targetKeywords = ["about the job", "job description", "about the role", "role description", "responsibilities", "key responsibilities"];
   
   for (const el of elements) {
-    const text = el.innerText ? el.innerText.replace(/\s+/g, " ").trim().toLowerCase() : "";
+    const text = el.textContent ? el.textContent.replace(/\s+/g, " ").trim().toLowerCase() : "";
     if (text.length > 0 && text.length < 60) {
       const matches = targetKeywords.some(kw => text.includes(kw));
       if (matches) {
@@ -381,7 +381,7 @@ function extractDescriptionFromHeader(headerNode) {
       }
     }
     
-    textContent += sibling.innerText + "\n";
+    textContent += sibling.textContent + "\n";
     sibling = sibling.nextElementSibling;
     siblingCount++;
   }
@@ -405,8 +405,8 @@ function detectDescriptionFallback() {
 
   for (const sel of commonContainers) {
     const el = document.querySelector(sel);
-    if (el && el.innerText.length > maxText.length) {
-      maxText = el.innerText;
+    if (el && el.textContent.length > maxText.length) {
+      maxText = el.textContent;
       longestContainer = el;
     }
   }
@@ -416,7 +416,7 @@ function detectDescriptionFallback() {
   }
 
   // If no common container is large, extract whole body text
-  return document.body.innerText;
+  return document.body.textContent;
 }
 
 /**
@@ -441,7 +441,7 @@ function querySelectorAcrossFrames(root, selectors, returnHtml = false) {
   for (const selector of selectors) {
     const element = root.querySelector(selector);
     if (element) {
-      const val = returnHtml ? element.innerHTML : element.innerText;
+      const val = returnHtml ? element.innerHTML : element.textContent;
       if (val && val.replace(/\s+/g, " ").trim().length > 100) {
         return val;
       }
