@@ -35,22 +35,36 @@ function scanJobPage() {
     ({ company, title, description } = scanLever());
   }
 
-  // Fallback for company name if not found
-  if (!company) {
-    company = detectCompanyFallback();
-  }
-
-  // Fallback for job title if not found
-  if (!title) {
-    title = detectTitleFallback();
-  }
-
   // Fallback for job description if not found
   if (!description) {
     description = scanJobPageByKeywords();
   }
+
+  const isKnownPlatform = url.includes("linkedin.com") || 
+                          url.includes("wellfound.com") || url.includes("angel.co") || 
+                          url.includes("greenhouse.io") || 
+                          url.includes("lever.co");
+
   if (!description) {
-    description = detectDescriptionFallback();
+    if (isKnownPlatform) {
+      title = "No active job selected";
+      company = url.includes("linkedin.com") ? "LinkedIn" : 
+                (url.includes("wellfound.com") || url.includes("angel.co") ? "Wellfound" : 
+                (url.includes("greenhouse.io") ? "Greenhouse" : "Lever"));
+      description = "No active job description detected. Please open a specific job listing page or details pane before scanning.";
+    } else {
+      description = detectDescriptionFallback();
+    }
+  }
+
+  // Fallback for company name if not found
+  if (!company && description && !description.startsWith("No active job description detected")) {
+    company = detectCompanyFallback();
+  }
+
+  // Fallback for job title if not found
+  if (!title && description && !description.startsWith("No active job description detected")) {
+    title = detectTitleFallback();
   }
 
   // Final cleanup
