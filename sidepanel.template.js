@@ -712,33 +712,76 @@ function downloadPDF() {
   const sandbox = document.getElementById("hidden-resume-sandbox");
   sandbox.innerHTML = htmlToCompile;
 
-  const targetElement = sandbox.querySelector(".resume-container") || sandbox;
-  const companyNameClean = (currentJobData.company || "Company").trim().replace(/[^a-zA-Z0-9]/g, "_");
-  
-  const options = {
-    margin: [0.35, 0.4, 0.35, 0.4], // [top, left, bottom, right] margins in inches
-    filename: `Brent_Barbadillo_Resume_${companyNameClean}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2.5, useCORS: true, letterRendering: true },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
-  };
-
   showLoading("Compiling PDF Resume...");
 
-  // Execute html2pdf bundle compilation
-  html2pdf()
-    .set(options)
-    .from(targetElement)
-    .save()
-    .then(() => {
+  setTimeout(() => {
+    try {
+      const targetElement = sandbox.querySelector(".resume-container") || sandbox;
+      const companyNameClean = ((currentJobData && currentJobData.company) || "Company").trim().replace(/[^a-zA-Z0-9]/g, "_");
+      const filename = `Brent_Barbadillo_Resume_${companyNameClean}.pdf`;
+
+      const options = {
+        margin: [0.35, 0.4, 0.35, 0.4], // [top, left, bottom, right] margins in inches
+        filename: filename,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2.0, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+      };
+
+      if (typeof html2pdf !== "function") {
+        throw new Error("html2pdf library is not loaded properly.");
+      }
+
+      // Generate PDF blob and trigger chrome.downloads API
+      html2pdf()
+        .set(options)
+        .from(targetElement)
+        .outputPdf("blob")
+        .then((blob) => {
+          const blobUrl = URL.createObjectURL(blob);
+
+          if (chrome && chrome.downloads && chrome.downloads.download) {
+            chrome.downloads.download(
+              {
+                url: blobUrl,
+                filename: filename,
+                saveAs: true
+              },
+              (downloadId) => {
+                hideLoading();
+                sandbox.innerHTML = "";
+                if (chrome.runtime.lastError) {
+                  console.warn("chrome.downloads fallback:", chrome.runtime.lastError);
+                  triggerAnchorDownload(blobUrl, filename);
+                }
+              }
+            );
+          } else {
+            triggerAnchorDownload(blobUrl, filename);
+            hideLoading();
+            sandbox.innerHTML = "";
+          }
+        })
+        .catch((err) => {
+          hideLoading();
+          console.error("PDF Compilation error:", err);
+          alert(`PDF Compilation failed: ${err.message || err}`);
+        });
+    } catch (err) {
       hideLoading();
-      sandbox.innerHTML = ""; // Clear sandbox
-    })
-    .catch((err) => {
-      hideLoading();
-      console.error("PDF Compilation error:", err);
-      alert(`PDF Compilation failed: ${err.message}`);
-    });
+      console.error("PDF Setup error:", err);
+      alert(`PDF Setup failed: ${err.message || err}`);
+    }
+  }, 150);
+}
+
+function triggerAnchorDownload(blobUrl, filename) {
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 /**
