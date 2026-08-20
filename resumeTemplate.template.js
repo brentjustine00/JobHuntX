@@ -190,6 +190,8 @@ export const resumeTemplate = `
         <span><a href="mailto:[YOUR_EMAIL_ADDRESS]">[YOUR EMAIL ADDRESS]</a></span>
       </div>
       <div class="header-links">
+        <span>Portfolio: <a href="[YOUR_PORTFOLIO_URL]" target="_blank">[YOUR_PORTFOLIO_URL]</a></span>
+        <span>|</span>
         <span>GitHub: <a href="https://github.com/[YOUR_GITHUB_USERNAME]" target="_blank">github.com/[YOUR_GITHUB_USERNAME]</a></span>
         <span>|</span>
         <span>LinkedIn: <a href="https://www.linkedin.com/in/[YOUR_LINKEDIN_USERNAME]/" target="_blank">linkedin.com/in/[YOUR_LINKEDIN_USERNAME]/</a></span>
