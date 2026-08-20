@@ -1,6 +1,6 @@
 import { resumeTemplate } from "./resumeTemplate.template.js";
 
-// Default Master Developer Profile Context (populated from Brent's complete resume)
+// Default Master Developer Profile Context
 const defaultProfileContext = `[YOUR NAME]
 Location: [YOUR LOCATION]
 Email: [YOUR EMAIL ADDRESS]
@@ -122,25 +122,6 @@ function loadConfiguration() {
     
     // Set developer profile (use default if not saved yet)
     let profileText = result.developerProfile || defaultProfileContext;
-    
-    // Automatically migrate old default profile details to the new details if they are present
-    let needsUpdate = false;
-    if (profileText && (profileText.includes("Lico De Bay") || profileText.includes("JobHuntX AI: Automated Resume & Cover Letter Tailoring Suite"))) {
-      if (profileText.includes("Scraped, parsed and sanitized text trading signals from Telegram.")) {
-        // Safe to replace the entire profile text since they are using the old default set of projects
-        profileText = defaultProfileContext;
-      } else {
-        // Surgical updates
-        profileText = profileText
-          .replace("JobHuntX AI: Automated Resume & Cover Letter Tailoring Suite (JavaScript, Manifest V3, Gemini API, Google Apps Script, Chrome Extension APIs, DOM Manipulation):", "JobHuntX AI: Automated AI Recruitment and ATS Resume Engine (JavaScript, Chrome Extensions API (Manifest V3), Google Gemini API (Gemini 3.5 Flash), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation):")
-          .replace("Built a Chrome extension that scrapes and parses unstructured HTML of active job listings directly from LinkedIn and Wellfound.", "Engineered a Manifest V3 Chrome Extension utilizing an ephemeral background service worker and the Chrome SidePanel API to construct a persistent split-screen workspace for job application workflows.")
-          .replace("Engineered a dynamic project-filtering and tailoring engine that maps developer profiles against job specifications to ensure single-page resume ATS compliance.", "Developed a resilient DOM scraping engine that extracts unstructured HTML job descriptions in real-time from active job boards including LinkedIn, Wellfound, Greenhouse, and Lever.")
-          .replace("Orchestrated background service workers for secure Gemini API integration, generating hook-focused cover letters and tailored engineering resumes.", "Integrated the Google Gemini 3.5 Flash API to parse target job descriptions and dynamically tailor resumes by selecting the top 3–4 most relevant projects while hiding the rest to fit single-page limits.")
-          .replace("Implemented Google Drive synchronization via a Google Apps Script proxy to auto-upload generated PDFs and embed live links into cover letters.", "Built a Google Drive auto-upload sync that compiles resumes client-side using html2pdf.js, uploads the PDF via a Google Apps Script proxy, and dynamically inserts the live shareable links into tailored cover letters.")
-          .replace("Lico De Bay", "Liceo De Bay");
-      }
-      needsUpdate = true;
-    }
     
     document.getElementById("profile-context-textarea").value = profileText;
     
@@ -488,7 +469,7 @@ function autoCompileAndUploadToDrive(coverLetterText, webAppUrl) {
 
   const targetElement = sandbox.querySelector(".resume-container") || sandbox;
   const companyNameClean = (currentJobData.company || "Company").trim().replace(/[^a-zA-Z0-9]/g, "_");
-  const filename = `Brent_Barbadillo_Resume_${companyNameClean}.pdf`;
+  const filename = `Tailored_Resume_${companyNameClean}.pdf`;
 
   const options = {
     margin: [0.35, 0.4, 0.35, 0.4],
@@ -724,7 +705,7 @@ function downloadPDF() {
     try {
       const targetElement = sandbox.querySelector(".resume-container") || sandbox;
       const companyNameClean = ((currentJobData && currentJobData.company) || "Company").trim().replace(/[^a-zA-Z0-9]/g, "_");
-      const filename = `Brent_Barbadillo_Resume_${companyNameClean}.pdf`;
+      const filename = `Tailored_Resume_${companyNameClean}.pdf`;
 
       const options = {
         margin: [0.35, 0.4, 0.35, 0.4], // [top, left, bottom, right] margins in inches
