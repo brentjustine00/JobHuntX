@@ -470,13 +470,14 @@ function autoCompileAndUploadToDrive(coverLetterText, webAppUrl) {
   const targetElement = sandbox.querySelector(".resume-container") || sandbox;
   const filename = "Resume.pdf";
 
-  const options = {
-    margin: [0.35, 0.4, 0.35, 0.4],
-    filename: filename,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2.5, useCORS: true, letterRendering: true },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
-  };
+      const options = {
+        margin: [0.3, 0.35, 0.3, 0.35],
+        filename: filename,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2.0, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+      };
 
   // output('blob') renders the compilation directly into memory
   html2pdf()
@@ -706,11 +707,12 @@ function downloadPDF() {
       const filename = "Resume.pdf";
 
       const options = {
-        margin: [0.35, 0.4, 0.35, 0.4], // [top, left, bottom, right] margins in inches
+        margin: [0.3, 0.35, 0.3, 0.35],
         filename: filename,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2.0, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0 },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] }
       };
 
       if (typeof html2pdf !== "function") {

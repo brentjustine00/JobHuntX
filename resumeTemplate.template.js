@@ -20,18 +20,18 @@ export const resumeTemplate = `
       width: 100%;
       max-width: 800px;
       margin: 0 auto;
-      padding: 30px 40px;
+      padding: 24px 36px;
       box-sizing: border-box;
     }
     
     /* Header Section */
     .header {
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .header h1 {
       margin: 0 0 4px 0;
-      font-size: 22pt;
+      font-size: 21pt;
       color: #0f2d59; /* Classic deep blue */
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -40,7 +40,7 @@ export const resumeTemplate = `
     .header-links {
       font-size: 9pt;
       color: #333333;
-      margin: 3px 0;
+      margin: 2px 0;
     }
     .header-links span {
       margin: 0 5px;
@@ -55,26 +55,30 @@ export const resumeTemplate = `
     
     /* Section Headings */
     .section-title {
-      font-size: 11.5pt;
+      font-size: 11pt;
       font-weight: bold;
       color: #0f2d59;
       border-bottom: 2px solid #0f2d59;
       text-transform: uppercase;
-      margin-top: 16px;
-      margin-bottom: 8px;
+      margin-top: 12px;
+      margin-bottom: 6px;
       padding-bottom: 2px;
       letter-spacing: 0.5px;
+      page-break-after: avoid;
+      break-after: avoid;
     }
     
     /* Skills */
     .skills-grid {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      margin-bottom: 8px;
+      gap: 3px;
+      margin-bottom: 6px;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     .skills-line {
-      font-size: 9.5pt;
+      font-size: 9pt;
     }
     .skills-line strong {
       color: #1a1a1a;
@@ -82,14 +86,15 @@ export const resumeTemplate = `
     
     /* Projects/Experience Grouping */
     .project-item {
-      margin-bottom: 12px;
-      page-break-inside: avoid; /* Avoid splitting a single project across pages */
+      margin-bottom: 9px;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     .project-header {
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 10pt;
+      font-size: 9.5pt;
       color: #1a1a1a;
       margin-bottom: 1px;
     }
@@ -97,51 +102,57 @@ export const resumeTemplate = `
       font-style: italic;
       color: #555555;
       font-size: 8.5pt;
-      margin-bottom: 4px;
-    }
-    .bullets {
-      margin: 0;
-      padding-left: 20px;
-      font-size: 9pt;
-      color: #2b2b2b;
-    }
-    .bullets li {
       margin-bottom: 3px;
     }
     
-    /* Work Experience */
+    /* Bullets */
+    .bullets {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .bullets li {
+      margin-bottom: 2px;
+      font-size: 9pt;
+      color: #222222;
+    }
+    
+    /* Work Experience Item */
     .work-item {
       margin-bottom: 8px;
       page-break-inside: avoid;
+      break-inside: avoid;
     }
     .work-header {
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 10pt;
+      font-size: 9.5pt;
       color: #1a1a1a;
       margin-bottom: 2px;
     }
     .work-date {
       font-style: italic;
-      font-weight: normal;
       color: #555555;
-      font-size: 9pt;
+      font-size: 8.5pt;
+      font-weight: normal;
     }
     
     /* Education */
     .education-item {
       display: flex;
       justify-content: space-between;
-      font-size: 9.5pt;
-      margin-bottom: 4px;
+      font-size: 9pt;
+      margin-bottom: 1px;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     .education-sub {
-      font-style: italic;
-      color: #555555;
       font-size: 8.5pt;
-      margin-top: -3px;
-      margin-bottom: 6px;
+      color: #555555;
+      font-style: italic;
+      margin-bottom: 4px;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     /* Page-break helpers */
