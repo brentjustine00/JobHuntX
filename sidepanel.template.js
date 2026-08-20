@@ -467,6 +467,7 @@ function autoCompileAndUploadToDrive(coverLetterText, webAppUrl) {
   const sandbox = document.getElementById("hidden-resume-sandbox");
   sandbox.innerHTML = htmlToCompile;
 
+  const targetElement = sandbox.querySelector(".resume-container") || sandbox;
   let companySuffix = "";
   if (currentJobData && currentJobData.company && !currentJobData.company.includes("Click scan") && currentJobData.company.trim() !== "Company") {
     const clean = currentJobData.company.trim().replace(/[^a-zA-Z0-9]/g, "_");
@@ -706,6 +707,7 @@ function downloadPDF() {
 
   setTimeout(() => {
     try {
+      const targetElement = sandbox.querySelector(".resume-container") || sandbox;
       let companySuffix = "";
       if (currentJobData && currentJobData.company && !currentJobData.company.includes("Click scan") && currentJobData.company.trim() !== "Company") {
         const clean = currentJobData.company.trim().replace(/[^a-zA-Z0-9]/g, "_");
