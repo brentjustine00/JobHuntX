@@ -75,11 +75,17 @@ let currentJobData = {
 let tailoredResumeHtml = "";
 
 // Initialize App
-document.addEventListener("DOMContentLoaded", () => {
+function initApp() {
   initTabs();
   loadConfiguration();
   registerEventListeners();
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
 
 /**
  * Handle Tab Navigation and transitions
