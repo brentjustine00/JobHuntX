@@ -468,12 +468,7 @@ function autoCompileAndUploadToDrive(coverLetterText, webAppUrl) {
   sandbox.innerHTML = htmlToCompile;
 
   const targetElement = sandbox.querySelector(".resume-container") || sandbox;
-  let companySuffix = "";
-  if (currentJobData && currentJobData.company && !currentJobData.company.includes("Click scan") && currentJobData.company.trim() !== "Company") {
-    const clean = currentJobData.company.trim().replace(/[^a-zA-Z0-9]/g, "_");
-    if (clean) companySuffix = `_${clean}`;
-  }
-  const filename = `Tailored_Resume${companySuffix}.pdf`;
+  const filename = "Resume.pdf";
 
   const options = {
     margin: [0.35, 0.4, 0.35, 0.4],
@@ -708,12 +703,7 @@ function downloadPDF() {
   setTimeout(() => {
     try {
       const targetElement = sandbox.querySelector(".resume-container") || sandbox;
-      let companySuffix = "";
-      if (currentJobData && currentJobData.company && !currentJobData.company.includes("Click scan") && currentJobData.company.trim() !== "Company") {
-        const clean = currentJobData.company.trim().replace(/[^a-zA-Z0-9]/g, "_");
-        if (clean) companySuffix = `_${clean}`;
-      }
-      const filename = `Tailored_Resume${companySuffix}.pdf`;
+      const filename = "Resume.pdf";
 
       const options = {
         margin: [0.35, 0.4, 0.35, 0.4], // [top, left, bottom, right] margins in inches
