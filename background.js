@@ -43,7 +43,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
  */
 async function fetchGeminiAPI(compiledPrompt, apiKey) {
   const url = "https://generativelanguage.googleapis.com/v1beta/interactions";
-  
+
   const payload = {
     model: "gemini-3.5-flash",
     input: compiledPrompt
@@ -87,7 +87,7 @@ function parseGeminiResponse(responseJson) {
   if (responseJson.output) {
     return responseJson.output;
   }
-  
+
   // Check typical Google AI Studio structure just in case
   if (
     responseJson.candidates &&
