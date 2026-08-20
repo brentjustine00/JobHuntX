@@ -1,3 +1,5 @@
 # Local profile files containing personal contact details (do not commit to public repositories)
 resumeTemplate.js
 sidepanel.js
+*.pdf
+temp_resume.html
