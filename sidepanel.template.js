@@ -262,7 +262,7 @@ async function generateTailoredAssets() {
 - Salutation: "Dear [Company Name] Engineering Team," (or "Dear Hiring Team,")
 - Paragraph 1 (Custom Hook Intro): Address the target company by name and immediately capture a technical manager's attention by highlighting their core engineering/architectural challenge based on the job description.
 - Paragraph 2 (High-Signal Technical Body): Demonstrate metrics-driven achievements using real-world engineering integrations (FastAPI, Webhooks, Python asyncio, Supabase RLS, Manifest V3 Chrome Extensions, WebRTC, React/Next.js, TradeLocker API).
-- Paragraph 3 (Closing & Call to Action): Direct, confident call to action. State: "You can explore my interactive portfolio at [YOUR_PORTFOLIO_URL] or view my tailored resume here: [Resume Link]."
+- Paragraph 3 (Closing & Call to Action): Direct, confident call to action. State: "You can explore my interactive portfolio at [YOUR_PORTFOLIO_URL] or view my resume here: [Resume Link]."
 - Sign-off: "Sincerely,\n[YOUR NAME]"
 2. 'resumeBullets': Highly optimized, ATS-targeted bullet points rewritten to echo the exact keywords and performance metrics demanded by the job posting. Choose the top 3 or 4 projects that are most relevant to this job description and assign bullets to them.`;
 
@@ -595,7 +595,7 @@ function mergeDriveLinkIntoCoverLetter(coverLetter, driveLink) {
 
   // If no placeholder matched, prepend/append it at the bottom of the letter
   if (!replaced) {
-    resultText += `\n\nTailored Resume: ${driveLink}`;
+    resultText += `\n\nResume: ${driveLink}`;
   }
   return resultText;
 }
