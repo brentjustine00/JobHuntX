@@ -126,7 +126,7 @@ function loadConfiguration() {
     
     document.getElementById("profile-context-textarea").value = profileText;
     
-    if (!result.developerProfile || needsUpdate) {
+    if (!result.developerProfile) {
       chrome.storage.local.set({ developerProfile: profileText });
     }
   });
@@ -527,11 +527,16 @@ function autoCompileAndUploadToDrive(coverLetterText, webAppUrl) {
             filename: filename
           })
         })
-        .then((response) => {
+        .then(async (response) => {
           if (!response.ok) {
             throw new Error(`HTTP Error ${response.status}`);
           }
-          return response.json();
+          const rawText = await response.text();
+          try {
+            return JSON.parse(rawText);
+          } catch (err) {
+            throw new Error(`Invalid response from Apps Script: ${rawText.substring(0, 150)}`);
+          }
         })
         .then((result) => {
           hideLoading();
