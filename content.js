@@ -54,6 +54,8 @@ function scanJobPage() {
     ({ company, title, description } = scanGreenhouse());
   } else if (url.includes("lever.co")) {
     ({ company, title, description } = scanLever());
+  } else if (url.includes("onlinejobs.ph")) {
+    ({ company, title, description } = scanOnlineJobs());
   }
 
   // Fallback for job description if not found
@@ -64,7 +66,8 @@ function scanJobPage() {
   const isKnownPlatform = url.includes("linkedin.com") || 
                           url.includes("wellfound.com") || url.includes("angel.co") || 
                           url.includes("greenhouse.io") || 
-                          url.includes("lever.co");
+                          url.includes("lever.co") ||
+                          url.includes("onlinejobs.ph");
 
   let debugInfo = "";
   if (!description) {
@@ -112,7 +115,8 @@ function scanJobPage() {
       title = "No active job selected";
       company = url.includes("linkedin.com") ? "LinkedIn" : 
                 (url.includes("wellfound.com") || url.includes("angel.co") ? "Wellfound" : 
-                (url.includes("greenhouse.io") ? "Greenhouse" : "Lever"));
+                (url.includes("greenhouse.io") ? "Greenhouse" : 
+                (url.includes("onlinejobs.ph") ? "OnlineJobs.ph" : "Lever")));
       description = "No active job description detected. Please open a specific job listing page or details pane before scanning.";
     } else {
       description = detectDescriptionFallback();
@@ -289,6 +293,58 @@ function scanLever() {
 
   return {
     company,
+    title: queryFirstSelector(titleSelectors),
+    description: queryFirstSelector(descriptionSelectors, true)
+  };
+}
+
+/**
+ * OnlineJobs.ph Specific Selector Scraping
+ */
+function scanOnlineJobs() {
+  const companySelectors = [
+    ".employer-name",
+    ".company-name",
+    "a[href*='/jobseekers/info/']",
+    "a[href*='/employer/']",
+    ".job-details .company",
+    "h2.company",
+    "h3.company",
+    ".profile-name"
+  ];
+
+  const titleSelectors = [
+    "h1.job-title",
+    ".job-post-title",
+    "h1.title",
+    "h1",
+    "header h1",
+    ".job-heading",
+    "h2.job-title"
+  ];
+
+  const descriptionSelectors = [
+    "#job-description",
+    ".job-description",
+    ".job-post-content",
+    "#job-post-content",
+    ".job-details",
+    ".card-body",
+    "article",
+    ".main-content",
+    "#main-content"
+  ];
+
+  let company = queryFirstSelector(companySelectors);
+  if (!company) {
+    const titleText = document.title;
+    if (titleText.includes(" - ")) {
+      company = titleText.split(" - ")[0].trim();
+    }
+  }
+
+  return {
+    company: company || "OnlineJobs.ph Employer",
     title: queryFirstSelector(titleSelectors),
     description: queryFirstSelector(descriptionSelectors, true)
   };
