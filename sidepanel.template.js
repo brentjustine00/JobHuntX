@@ -178,7 +178,7 @@ function scanCurrentTab() {
       hideLoading();
       
       if (chrome.runtime.lastError) {
-        console.warn("Script injection fallback required:", chrome.runtime.lastError ? chrome.runtime.lastError.message : "Listener missing");
+        const _ignoredError = chrome.runtime.lastError;
         // Script might not be loaded yet; inject it manually
         injectContentScript(activeTab.id);
         return;
