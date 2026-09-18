@@ -472,7 +472,7 @@ function displayCoverLetter(clText) {
     .replace(/>/g, "&gt;");
 
   // Convert http/https URLs into interactive clickable hyperlinks
-  const urlRegex = /(https?://[^s<]+)/g;
+  const urlRegex = /https?:\/\/[^\s<]+/g;
   const formattedHtml = safeText.replace(urlRegex, (url) => {
     return `<a href="${url}" target="_blank" style="color: #3b82f6; font-weight: 600; text-decoration: underline;">${url}</a>`;
   });
