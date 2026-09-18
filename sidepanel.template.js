@@ -257,8 +257,15 @@ async function generateTailoredAssets() {
     showLoading("Generating tailored assets via Gemini...");
 
     // Build the exact requested orchestration instruction with enhanced hook cover letter requirements
-    const basePrompt = `You are an elite Tech Recruiter. Analyze this Job Description [INSERT_JOB_DESC] against this Developer Profile [INSERT_PROFILE]. Generate two distinct JSON strings:
-1. 'coverLetter': A 3-paragraph, punchy, high-signal cover letter focusing heavily on my real-world engineering integrations (FastAPI, Webhooks, Algorithmic Randomization, Scraping, TradeLocker API), entirely omitting generic corporate fluff. Please include a [Resume Link] placeholder in the text where my tailored resume link can be inserted. Make sure the cover letter starts with a highly engaging, custom "hook" intro that immediately captures the attention of a technical manager by addressing their core architectural pain points, followed by a metrics-driven body showing how I can solve them, and ending with a direct, confident peer-to-peer call to action.
+    const basePrompt = `You are an elite Tech Recruiter and Senior Software Engineer. Analyze this Job Description [INSERT_JOB_DESC] against this Developer Profile [INSERT_PROFILE]. Generate two distinct JSON properties:
+1. 'coverLetter': A formal, professionally formatted cover letter in standard business letter format.
+It MUST be formatted with clear line breaks (\n\n) and include:
+- Today's Date and Target Recipient Header (e.g. "Engineering Hiring Team", Target Company Name)
+- Salutation (e.g. "Dear [Company Name] Hiring Team," or "Dear Engineering Manager,")
+- Paragraph 1 (Custom Hook Intro): Address the target company by name and immediately capture a technical manager's attention by highlighting their core engineering/architectural challenge based on the job description.
+- Paragraph 2 (High-Signal Technical Body): Demonstrate metrics-driven achievements using real-world engineering integrations (FastAPI, Webhooks, Python asyncio, Supabase RLS, Manifest V3 Chrome Extensions, WebRTC, React/Next.js, TradeLocker API).
+- Paragraph 3 (Closing & Call to Action): Direct, confident peer-to-peer call to action referencing the candidate's portfolio at [YOUR_PORTFOLIO_URL] and including a [Resume Link] placeholder for the tailored resume.
+- Formal Sign-off (e.g., "Sincerely,\n[YOUR NAME]\n[YOUR EMAIL ADDRESS] | [YOUR PHONE NUMBER] | [YOUR_PORTFOLIO_URL]")
 2. 'resumeBullets': Highly optimized, ATS-targeted bullet points rewritten to echo the exact keywords and performance metrics demanded by the job posting. Choose the top 3 or 4 projects that are most relevant to this job description and assign bullets to them.`;
 
     // Replace the placeholders with the actual content
@@ -455,7 +462,22 @@ function robustParse(rawText) {
  * Render the cover letter into the UI
  */
 function displayCoverLetter(clText) {
-  document.getElementById("output-cover-letter").textContent = clText;
+  const container = document.getElementById("output-cover-letter");
+  if (!container) return;
+  
+  // Escape HTML characters to prevent XSS
+  let safeText = clText
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Convert http/https URLs into interactive clickable hyperlinks
+  const urlRegex = /(https?://[^s<]+)/g;
+  const formattedHtml = safeText.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank" style="color: #3b82f6; font-weight: 600; text-decoration: underline;">${url}</a>`;
+  });
+
+  container.innerHTML = formattedHtml;
 }
 
 /**
@@ -682,13 +704,16 @@ function updateResumePreview(htmlString) {
  * Copy cover letter text block to clipboard
  */
 function copyCoverLetter() {
-  const text = document.getElementById("output-cover-letter").textContent;
+  const container = document.getElementById("output-cover-letter");
+  const text = container ? (container.innerText || container.textContent) : "";
   navigator.clipboard.writeText(text).then(() => {
     const status = document.getElementById("cl-copy-status");
-    status.style.display = "inline";
-    setTimeout(() => {
-      status.style.display = "none";
-    }, 2000);
+    if (status) {
+      status.style.display = "inline";
+      setTimeout(() => {
+        status.style.display = "none";
+      }, 2000);
+    }
   });
 }
 
