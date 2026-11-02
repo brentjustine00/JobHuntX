@@ -43,8 +43,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function fetchGroqAPI(compiledPrompt, apiKey) {
   const models = [
     "qwen-2.5-32b",
-    "qwen-2.5-coder-32b",
-    "llama-3.3-70b-versatile"
+    "qwen-2.5-coder-32b"
   ];
 
   let lastError = null;
