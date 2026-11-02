@@ -2,7 +2,7 @@
 
 **JobHuntX AI** is a high-performance, modern Manifest V3 Chrome Extension designed as an automated, real-time Cover Letter Generator and ATS-Friendly Resume Tailoring Suite. 
 
-By analyzing active job descriptions directly from platforms like LinkedIn, Wellfound, Greenhouse, Lever, and OnlineJobs.ph, the extension maps your master developer profile against job requirements. It leverages the **Google Gemini 3.5 Flash** model to generate a custom, hook-focused cover letter and tailors your resume dynamically—focusing on the most relevant technical projects and compiling them into a downloadable, single-page ATS-compliant PDF.
+By analyzing active job descriptions directly from platforms like LinkedIn, Wellfound, Greenhouse, Lever, and OnlineJobs.ph, the extension maps your master developer profile against job requirements. It leverages the **Groq API (Qwen 2.5 32B)** to generate a custom, hook-focused cover letter and tailors your resume dynamically—focusing on the most relevant technical projects and compiling them into a downloadable, single-page ATS-compliant PDF.
 
 ---
 
@@ -21,7 +21,7 @@ By analyzing active job descriptions directly from platforms like LinkedIn, Well
 ```text
 JobHuntX/
 ├── manifest.json            # Extension configuration (MV3 permissions, scripts)
-├── background.js           # Ephemeral service worker managing Gemini API interactions
+├── background.js           # Ephemeral service worker managing Groq API (Qwen 2.5) interactions
 ├── content.js              # Resilient DOM scraping engine for job descriptions
 ├── sidepanel.html          # Split-screen neon-dark layout dashboard
 ├── sidepanel.js            # Main controller for state, API, and PDF downloads
@@ -54,7 +54,7 @@ Since private developer details are excluded from Git, you must first create you
 ### 1. Google AI Studio Settings
 1. Click the pinned **JobHuntX AI** icon to launch the side panel.
 2. Navigate to the **Configuration** tab.
-3. Paste your Gemini API Key in the **Gemini API Key** field and click **Save Settings**.
+3. Paste your Groq API Key (from [console.groq.com/keys](https://console.groq.com/keys)) in the **Groq API Key** field and click **Save Settings**.
 
 ### 2. Google Drive Auto-Upload Settings (Optional)
 To have the extension automatically compile your resume, upload it to Google Drive, and insert the link into your cover letter:

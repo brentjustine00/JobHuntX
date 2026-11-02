@@ -487,10 +487,14 @@
       
       <!-- API Settings -->
       <div class="card">
-        <div class="card-title">Google AI Studio Settings</div>
+        <div class="card-title">Groq API Settings (Qwen 2.5)</div>
         <div class="form-group">
-          <label for="input-api-key">Gemini API Key</label>
-          <input type="password" class="input-field" id="input-api-key" placeholder="Enter x-goog-api-key...">
+          <label for="input-api-key">Groq API Key</label>
+          <input type="password" class="input-field" id="input-api-key" placeholder="gsk_...">
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+          Get your free, ultra-fast API key from <a href="https://console.groq.com/keys" target="_blank" style="color: var(--accent-color);">console.groq.com/keys</a>
+        </div>
         </div>
         <div style="margin-top: 8px;">
           <button class="btn btn-primary" id="btn-save-config">Save Settings</button>
@@ -542,7 +546,7 @@
       <div class="card">
         <div class="card-title">Master Developer Profile</div>
         <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; display: flex; flex-direction: column; gap: 8px;">
-          <p>This profile is sent to the Gemini AI API to match qualifications against job requirements. Keep this updated to match your core experience.</p>
+          <p>This profile is sent to Groq AI (Qwen 2.5) to match qualifications against job requirements. Keep this updated to match your core experience.</p>
           <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
           <div class="form-group">
             <label for="profile-context-textarea">Developer Profile Prompt Context</label>

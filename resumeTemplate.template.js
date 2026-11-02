@@ -227,7 +227,7 @@ export const resumeTemplate = `
         <span>JobHuntX AI: Automated AI Recruitment and ATS Resume Engine</span>
       </div>
       <div class="project-tech">
-        Technologies used: JavaScript, Chrome Extensions API (Manifest V3), Google Gemini API (Gemini 3.5 Flash), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation
+        Technologies used: JavaScript, Chrome Extensions API (Manifest V3), Groq API (Qwen 2.5), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation
       </div>
       <ul class="bullets">
         <li id="bullet-project1">Engineered a Manifest V3 Chrome Extension utilizing an ephemeral background service worker and the Chrome SidePanel API to construct a persistent split-screen workspace for job application workflows.</li>

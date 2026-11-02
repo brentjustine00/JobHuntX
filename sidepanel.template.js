@@ -17,10 +17,10 @@ TECHNICAL SKILLS:
 - Tools and Protocols: Git, GitHub, Manifest V3, WebSockets, DOM Manipulation, JSON Parsing, Ngrok
 
 PROJECTS:
-1. JobHuntX AI: Automated AI Recruitment and ATS Resume Engine (JavaScript, Chrome Extensions API (Manifest V3), Google Gemini API (Gemini 3.5 Flash), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation):
+1. JobHuntX AI: Automated AI Recruitment and ATS Resume Engine (JavaScript, Chrome Extensions API (Manifest V3), Groq API (Qwen 2.5), Google Apps Script, html2pdf.js, Chrome SidePanel API, DOM Manipulation):
    - Engineered a Manifest V3 Chrome Extension utilizing an ephemeral background service worker and the Chrome SidePanel API to construct a persistent split-screen workspace for job application workflows.
    - Developed a resilient DOM scraping engine that extracts unstructured HTML job descriptions in real-time from active job boards including LinkedIn, Wellfound, Greenhouse, and Lever.
-   - Integrated the Google Gemini 3.5 Flash API to parse target job descriptions and dynamically tailor resumes by selecting the top 3–4 most relevant projects while hiding the rest to fit single-page limits.
+   - Integrated the Groq API (Qwen 2.5 32B) for ultra-fast inference to parse target job descriptions and dynamically tailor resumes by selecting the top 3–4 most relevant projects while hiding the rest to fit single-page limits.
    - Built a Google Drive auto-upload sync that compiles resumes client-side using html2pdf.js, uploads the PDF via a Google Apps Script proxy, and dynamically inserts the live shareable links into tailored cover letters.
 2. Real-Time OSINT Data Pipeline and Algorithmic Trading Bot (Python, Telethon, Pyrogram (Telegram API), TradeLocker API, WebSockets, Asyncio, Logging):
    - Architected a real-time Open Source Intelligence (OSINT) data pipeline that scrapes, sanitizes, and structure-parses raw text trading signals from dynamic Telegram channels.
@@ -113,9 +113,10 @@ function initTabs() {
  * Load saved API key and profile settings from chrome.storage.local
  */
 function loadConfiguration() {
-  chrome.storage.local.get(["geminiApiKey", "developerProfile", "gdriveUrl"], (result) => {
-    if (result.geminiApiKey) {
-      document.getElementById("input-api-key").value = result.geminiApiKey;
+  chrome.storage.local.get(["groqApiKey", "geminiApiKey", "developerProfile", "gdriveUrl"], (result) => {
+    const key = result.groqApiKey || result.geminiApiKey;
+    if (key) {
+      document.getElementById("input-api-key").value = key;
     }
     if (result.gdriveUrl) {
       document.getElementById("input-gdrive-url").value = result.gdriveUrl;
@@ -236,7 +237,7 @@ function updateJobUI(jobData) {
 }
 
 /**
- * Compile prompt and coordinate with background.js to hit Gemini API
+ * Compile prompt and coordinate with background.js to hit Groq API (Qwen 2.5)
  */
 async function generateTailoredAssets() {
   const jobDesc = document.getElementById("job-description-raw").value;
@@ -246,15 +247,16 @@ async function generateTailoredAssets() {
   }
 
   // Fetch latest developer profile and API key
-  chrome.storage.local.get(["geminiApiKey", "developerProfile"], async (config) => {
-    if (!config.geminiApiKey) {
-      alert("API Key is missing! Go to the 'Configuration' tab and input your Google AI Studio API key.");
+  chrome.storage.local.get(["groqApiKey", "geminiApiKey", "developerProfile"], async (config) => {
+    const apiKey = config.groqApiKey || config.geminiApiKey;
+    if (!apiKey) {
+      alert("Groq API Key is missing! Go to the 'Configuration' tab and input your Groq API key from console.groq.com/keys.");
       return;
     }
 
     const developerProfile = config.developerProfile || defaultProfileContext;
 
-    showLoading("Generating tailored assets via Gemini...");
+    showLoading("Generating tailored assets via Groq (Qwen 2.5)...");
 
     // Build the exact requested orchestration instruction with enhanced hook cover letter requirements
     const basePrompt = `You are an elite Tech Recruiter and Senior Software Engineer. Analyze this Job Description [INSERT_JOB_DESC] against this Developer Profile [INSERT_PROFILE]. Generate two distinct JSON properties:
@@ -362,7 +364,7 @@ function handleAIOutput(rawText) {
 }
 
 /**
- * Robust parsing of Gemini output to handle double JSON, markdown wrappers, or raw text fallbacks.
+ * Robust parsing of LLM JSON output to handle double JSON, markdown wrappers, or raw text fallbacks.
  */
 function robustParse(rawText) {
   let text = rawText.trim();
@@ -806,11 +808,11 @@ function triggerAnchorDownload(blobUrl, filename) {
 function saveApiKey() {
   const apiKey = document.getElementById("input-api-key").value.trim();
   if (!apiKey) {
-    alert("Please enter a valid API key.");
+    alert("Please enter a valid Groq API key (starts with gsk_).");
     return;
   }
-  chrome.storage.local.set({ geminiApiKey: apiKey }, () => {
-    alert("Gemini API Settings saved successfully!");
+  chrome.storage.local.set({ groqApiKey: apiKey }, () => {
+    alert("Groq API Key saved successfully!");
   });
 }
 
