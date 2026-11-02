@@ -2,7 +2,7 @@
 
 **JobHuntX AI** is a high-performance, modern Manifest V3 Chrome Extension designed as an automated, real-time Cover Letter Generator and ATS-Friendly Resume Tailoring Suite. 
 
-By analyzing active job descriptions directly from platforms like LinkedIn, Wellfound, Greenhouse, Lever, and OnlineJobs.ph, the extension maps your master developer profile against job requirements. It leverages the **Groq API (Qwen 2.5 32B)** to generate a custom, hook-focused cover letter and tailors your resume dynamically—focusing on the most relevant technical projects and compiling them into a downloadable, single-page ATS-compliant PDF.
+By analyzing active job descriptions directly from platforms like LinkedIn, Wellfound, Greenhouse, Lever, and OnlineJobs.ph, the extension maps your master developer profile against job requirements. It leverages the **Groq API (Qwen (qwen3.8-27b / qwen-2.5-32b))** to generate a custom, hook-focused cover letter and tailors your resume dynamically—focusing on the most relevant technical projects and compiling them into a downloadable, single-page ATS-compliant PDF.
 
 ---
 

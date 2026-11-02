@@ -1,4 +1,4 @@
-// Background service worker for JobHuntX AI (MV3) - Powered by Groq (Qwen 2.5)
+// Background service worker for JobHuntX AI (MV3) - Powered by Groq (Qwen)
 
 // Configure side panel to open on clicking the extension toolbar icon
 chrome.sidePanel
@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return;
       }
 
-      // Execute the async HTTP request to Groq API with Qwen 2.5
+      // Execute the async HTTP request to Groq API with live Qwen models
       fetchGroqAPI(request.prompt, apiKey)
         .then((data) => {
           sendResponse({ success: true, data: data });
@@ -37,40 +37,92 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 /**
- * Execute Groq Chat Completions API with Qwen models and fallbacks.
+ * Dynamically discover active Qwen models from GroqCloud API catalog,
+ * filtering out decommissioned or deprecated models.
+ */
+async function getAvailableQwenModels(apiKey) {
+  try {
+    const res = await fetch("https://api.groq.com/openai/v1/models", {
+      headers: {
+        "Authorization": `Bearer ${apiKey.trim()}`
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.data)) {
+        // Filter for active qwen models, excluding decommissioned ones (like coder, qwq)
+        const qwenModels = data.data
+          .filter(m => {
+            const id = m.id.toLowerCase();
+            return id.includes("qwen") && !id.includes("coder") && !id.includes("qwq") && m.active !== false;
+          })
+          .map(m => m.id);
+
+        if (qwenModels.length > 0) {
+          // Prioritize latest models: qwen3.8 -> qwen-2.5-32b -> qwen3.6
+          qwenModels.sort((a, b) => {
+            if (a.includes("3.8")) return -1;
+            if (b.includes("3.8")) return 1;
+            if (a.includes("2.5-32b")) return -1;
+            if (b.includes("2.5-32b")) return 1;
+            if (a.includes("3.6")) return -1;
+            if (b.includes("3.6")) return 1;
+            return 0;
+          });
+          return qwenModels;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Could not query Groq models catalog, falling back to verified static list:", e);
+  }
+
+  // Active verified Qwen models on Groq
+  return [
+    "qwen/qwen3.8-27b",
+    "qwen-2.5-32b",
+    "qwen/qwen3.6-27b"
+  ];
+}
+
+/**
+ * Execute Groq Chat Completions API with dynamic Qwen model fallback.
  * Uses Groq LPU inference for blazing fast (<1s) JSON generation.
  */
 async function fetchGroqAPI(compiledPrompt, apiKey) {
-  const models = [
-    "qwen-2.5-32b",
-    "qwen-2.5-coder-32b"
-  ];
-
+  const models = await getAvailableQwenModels(apiKey);
   let lastError = null;
 
   for (const model of models) {
     try {
+      const requestBody = {
+        model: model,
+        messages: [
+          {
+            role: "system",
+            content: "You are an elite Tech Recruiter and Senior Software Engineer. You output responses strictly in valid JSON format."
+          },
+          {
+            role: "user",
+            content: compiledPrompt
+          }
+        ],
+        temperature: 0.2,
+        response_format: { type: "json_object" }
+      };
+
+      // Qwen 3 reasoning models require reasoning_format hidden when JSON mode is used
+      if (model.includes("qwen3")) {
+        requestBody.reasoning_format = "hidden";
+      }
+
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${apiKey.trim()}`
         },
-        body: JSON.stringify({
-          model: model,
-          messages: [
-            {
-              role: "system",
-              content: "You are an elite Tech Recruiter and Senior Software Engineer. You output responses strictly in valid JSON format."
-            },
-            {
-              role: "user",
-              content: compiledPrompt
-            }
-          ],
-          temperature: 0.2,
-          response_format: { type: "json_object" }
-        })
+        body: JSON.stringify(requestBody)
       });
 
       if (response.ok) {
@@ -92,7 +144,7 @@ async function fetchGroqAPI(compiledPrompt, apiKey) {
       }
 
       // If rate limit (429) or model temporarily unavailable (404/503), try next fallback model
-      if (response.status === 429 || response.status === 404 || response.status === 503) {
+      if (response.status === 429 || response.status === 404 || response.status === 400 || response.status === 503) {
         continue;
       }
     } catch (err) {
